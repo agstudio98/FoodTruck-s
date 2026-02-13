@@ -10,7 +10,8 @@ const app = express();
 // 1. Middlewares básicos
 // Allow larger payloads (profile images as data URIs)
 app.use(express.json({ limit: '5mb' }));
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+const FRONTEND_ORIGIN = process.env.FRONTEND_URL || 'http://localhost:5173';
+app.use(cors({ origin: FRONTEND_ORIGIN, credentials: true }));
 
 // 2. Configuración de Sesión (Importante para OAuth)
 app.use(session({
