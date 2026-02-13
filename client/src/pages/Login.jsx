@@ -3,6 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,7 +19,7 @@ export default function Login() {
   // --- LÓGICA PARA REDES SOCIALES (Solo Google) ---
   const handleSocialLogin = () => {
     // Redirección directa al endpoint de Google en el backend
-    window.location.href = "http://localhost:5000/api/auth/google";
+    window.location.href = `${API_URL}/api/auth/google`;
   };
 
   const handleSubmit = async (e) => {
@@ -41,7 +42,7 @@ export default function Login() {
     const endpoint = isLogin ? "/api/auth/login" : "/api/auth/register";
     
     try {
-      const response = await fetch(`http://localhost:5000${endpoint}`, {
+      const response = await fetch(`${API_URL}${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

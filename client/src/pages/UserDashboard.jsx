@@ -2,6 +2,7 @@ import { useState, useContext, useEffect, useRef } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 export default function UserDashboard() {
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
   const { user, updateUser } = useContext(AuthContext);
   const { fetchUser, logout } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("profile");
@@ -81,7 +82,7 @@ export default function UserDashboard() {
     if (newPassword !== confirmPassword) return alert('La nueva contraseña no coincide');
     setSecurityLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/auth/change-password', {
+      const res = await fetch(`${API_URL}/api/auth/change-password`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: user?._id || user?.id, currentPassword, newPassword })
       });
@@ -98,7 +99,7 @@ export default function UserDashboard() {
 
   const handleCreateToken = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/auth/token', {
+      const res = await fetch(`${API_URL}/api/auth/token`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user?._id || user?.id })
       });
@@ -114,7 +115,7 @@ export default function UserDashboard() {
 
   const handleDeleteToken = async (token) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/auth/token/${user?._id || user?.id}/${token}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/api/auth/token/${user?._id || user?.id}/${token}`, { method: 'DELETE' });
       if (res.ok) { await fetchUser(user?._id || user?.id); }
     } catch (err) { console.error(err); }
   };
@@ -143,7 +144,7 @@ export default function UserDashboard() {
     if (!user) return;
     setPaymentsLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/payments/${user?._id || user?.id}`);
+      const res = await fetch(`${API_URL}/api/payments/${user?._id || user?.id}`);
       if (res.ok) { const list = await res.json(); setPayments(list); }
     } catch (err) { console.error(err); }
     setPaymentsLoading(false);
@@ -156,7 +157,7 @@ export default function UserDashboard() {
   const handleAddPayment = async (e) => {
     e?.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/payments', {
+      const res = await fetch(`${API_URL}/api/payments`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user?._id || user?.id, ...newCard })
       });
@@ -168,7 +169,7 @@ export default function UserDashboard() {
   const handleDeletePayment = async (id) => {
     if (!confirm('Eliminar método de pago?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/payments/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/api/payments/${id}`, { method: 'DELETE' });
       if (res.ok) fetchPayments();
     } catch (err) { console.error(err); }
   };
@@ -368,7 +369,7 @@ export default function UserDashboard() {
                           </div>
                           <div style={{display:'flex',gap:8,alignItems:'center'}}>
                             {pm.isDefault && <span className="ios-status">Predeterminada</span>}
-                            {!pm.isDefault && <button className="ios-btn-secondary" onClick={async ()=>{ await fetch(`http://localhost:5000/api/payments/${pm._id}`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ isDefault: true }) }); fetchPayments(); }}>Hacer predeterminada</button>}
+                            {!pm.isDefault && <button className="ios-btn-secondary" onClick={async ()=>{ await fetch(`${API_URL}/api/payments/${pm._id}`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ isDefault: true }) }); fetchPayments(); }}>Hacer predeterminada</button>}
                             <button className="ios-btn-secondary" onClick={()=>handleDeletePayment(pm._id)}>Eliminar</button>
                           </div>
                         </div>

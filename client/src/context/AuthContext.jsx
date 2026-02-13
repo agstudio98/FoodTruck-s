@@ -3,6 +3,7 @@ import { createContext, useState, useEffect } from "react";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -78,7 +79,7 @@ export const AuthProvider = ({ children }) => {
       setUser(optimistic);
       localStorage.setItem("user", JSON.stringify(optimistic));
 
-      const response = await fetch("http://localhost:5000/api/auth/update", {
+      const response = await fetch(`${API_URL}/api/auth/update`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...formData, id }),
@@ -112,7 +113,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/auth/user/${id}`);
+      const res = await fetch(`${API_URL}/api/auth/user/${id}`);
       if (res.ok) {
         const u = await res.json();
         setUser(u);

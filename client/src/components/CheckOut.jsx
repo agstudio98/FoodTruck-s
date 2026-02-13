@@ -4,6 +4,7 @@ import { AuthContext } from '../context/AuthContext';
 import { CartContext } from '../context/CartContext';
 
 export default function CheckOut({ isOpen, onClose }) {
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const { cartItems, getTotalPrice, clearCart } = useContext(CartContext);
@@ -26,7 +27,7 @@ export default function CheckOut({ isOpen, onClose }) {
   const fetchPaymentMethods = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/payments/${user._id}`, {
+      const response = await fetch(`${API_URL}/api/payments/${user._id}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const methods = await response.json();
@@ -79,7 +80,7 @@ export default function CheckOut({ isOpen, onClose }) {
         deliveryNotes
       };
 
-      const response = await fetch('http://localhost:5000/api/orders', {
+      const response = await fetch(`${API_URL}/api/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

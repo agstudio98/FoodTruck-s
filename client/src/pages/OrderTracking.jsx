@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 export default function OrderTracking() {
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
   const { orderId } = useParams();
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
@@ -25,7 +26,7 @@ export default function OrderTracking() {
   const fetchOrderDetails = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
+      const response = await fetch(`${API_URL}/api/orders/${orderId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 

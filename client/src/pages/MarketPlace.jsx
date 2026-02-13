@@ -7,6 +7,7 @@ import ReviewForm from "../components/ReviewForm";
 import ReviewCard from "../components/ReviewCard";
 
 export default function Marketplace() {
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
   const { isAuthenticated } = useContext(AuthContext);
   const { addToCart } = useContext(CartContext);
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ export default function Marketplace() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/products');
+        const response = await fetch(`${API_URL}/api/products`);
         const data = await response.json();
         setFoods(data);
         setLoading(false);
@@ -55,7 +56,7 @@ export default function Marketplace() {
   const fetchProductReviews = async (productId) => {
     try {
       setLoadingReviews(true);
-      const response = await fetch(`http://localhost:5000/api/reviews/product/${productId}`);
+      const response = await fetch(`${API_URL}/api/reviews/product/${productId}`);
       const data = await response.json();
       setReviews(data.reviews || []);
     } catch (error) {
@@ -84,7 +85,7 @@ export default function Marketplace() {
         return navigate("/login");
       }
 
-      const response = await fetch('http://localhost:5000/api/reviews', {
+      const response = await fetch(`${API_URL}/api/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
