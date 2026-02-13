@@ -26,6 +26,8 @@ jobs:
         run: |
           cd client
           npm run build
+        env:
+          VITE_API_URL: ${{ secrets.BACKEND_URL }}
       
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
